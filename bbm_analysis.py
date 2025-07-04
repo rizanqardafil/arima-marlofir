@@ -196,6 +196,65 @@ def generate_bbm_data(locations, num_months, base_params):
     return bbm_data
 
 
+def generate_vehicle_data(num_months, vehicle_params):
+    """Generate vehicle count data"""
+    
+    vehicle_types = ['Kendaraan Air', 'Roda Dua', 'Roda Tiga', 'Roda Empat', 'Roda Lima', 'Alat Berat']
+    vehicle_data = {}
+    
+    for i, vehicle_type in enumerate(vehicle_types):
+        base_count = vehicle_params.get(f"vehicle_{i}_base", [100, 500, 200, 300, 50, 25][i])
+        var_pct = vehicle_params.get(f"vehicle_{i}_var", 15)
+        
+        np.random.seed(42 + i)
+        
+        monthly_counts = []
+        for month in range(num_months):
+            # Growth trend
+            growth = 1 + (0.01 * month)  # 1% growth per month
+            
+            # Seasonal variation (less for vehicles)
+            seasonal = 1 + 0.1 * np.sin(2 * np.pi * month / 12)
+            
+            # Random variation
+            variation = np.random.normal(1.0, var_pct/100)
+            
+            final_count = base_count * growth * seasonal * variation
+            monthly_counts.append(max(int(final_count), int(base_count * 0.7)))
+        
+        vehicle_data[vehicle_type] = monthly_counts
+    
+    return vehicle_data
+
+
+def generate_wave_data(num_months, wave_params):
+    """Generate wave height data"""
+    
+    wave_locations = ['Pantai Utara', 'Pantai Selatan', 'Pantai Timur', 'Pantai Barat']
+    wave_data = {}
+    
+    for i, location in enumerate(wave_locations):
+        base_height = wave_params.get(f"wave_{i}_base", [1.5, 2.0, 1.8, 1.6][i])
+        var_pct = wave_params.get(f"wave_{i}_var", 30)
+        
+        np.random.seed(50 + i)
+        
+        monthly_heights = []
+        for month in range(num_months):
+            # Strong seasonal pattern (higher waves in certain months)
+            seasonal = 1 + 0.4 * np.sin(2 * np.pi * month / 12 + np.pi/3)  # Peak around month 8-10
+            
+            # Random variation (waves are quite variable)
+            variation = np.random.normal(1.0, var_pct/100)
+            
+            final_height = base_height * seasonal * variation
+            monthly_heights.append(max(final_height, base_height * 0.4))  # Min 40% of base
+        
+        wave_data[f"Wave_{location}"] = monthly_heights
+    
+    return wave_data
+
+
 def create_summary_table(analysis_results):
     """Create summary table from analysis results"""
     
