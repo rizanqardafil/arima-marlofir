@@ -285,7 +285,7 @@ elif st.session_state.bbm_data:
             st.write(f"• Periode: {len(data['dates'])} bulan")
             st.write("---")
     
-    st.info("👈 Klik 'Run ARIMA Analysis' Untuk Melakukan Arima Analysisgit init")
+    st.info("👈 Klik 'Run ARIMA Analysis' Untuk Melakukan Arima Analysis")
 
 else:
     st.info("👈 Silakan input data BBM di sidebar untuk memulai")
@@ -307,6 +307,6 @@ else:
 # Footer
 st.markdown("---")
 if st.session_state.get('analysis_results'):
-    st.markdown("**✅ Analysis Complete!** | Dashboard Ready")
+    st.markdown("**✅ Analysis Complete!**")
 else:
     st.markdown("**⏳ Ready for Analysis** | Input data untuk mulai")
